@@ -1,0 +1,20 @@
+{
+  "projectName": "babel-plugin-react-data-testid",
+  "projectOwner": "akameco",
+  "files": ["readme.md"],
+  "commit": true,
+  "contributors": [
+    {
+      "login": "akameco",
+      "name": "akameco",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4002137?v=4",
+      "profile": "http://akameco.github.io",
+      "contributions": [
+        "code",
+        "doc",
+        "test",
+        "infra"
+      ]
+    }
+  ]
+}
