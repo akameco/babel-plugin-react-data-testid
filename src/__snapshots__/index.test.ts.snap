@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`react-data-testid simple Component: simple Component 1`] = `
+
+function Div() {
+  return <div />
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+function Div() {
+  return <div data-testid="Div" />
+}
+
+
+`;

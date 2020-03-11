@@ -1,5 +1,18 @@
-import m from '.'
+import pluginTester from 'babel-plugin-tester'
+import plugin from '.'
 
-test('snapshot', () => {
-  expect(m('unicorn')).toMatchSnapshot()
+pluginTester({
+  plugin,
+  babelOptions: { parserOpts: { plugins: ['jsx'] } },
+  snapshot: true,
+  tests: [
+    {
+      title: 'simple Component',
+      code: `
+        function Div() {
+          return <div />
+        }
+      `,
+    },
+  ],
 })

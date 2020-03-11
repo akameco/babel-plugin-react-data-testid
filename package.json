@@ -30,7 +30,10 @@
     "test": "jest",
     "test:ci": "jest --coverage --ci --runInBand"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/types": "^7.8.7"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -41,6 +44,8 @@
     "@types/jest": "^25.1.4",
     "@types/node": "^13.9.0",
     "all-contributors-cli": "^6.14.0",
+    "babel-log": "^2.0.0",
+    "babel-plugin-tester": "^8.0.1",
     "del-cli": "^3.0.0",
     "eslint": "^6.8.0",
     "eslint-config-precure": "^5.3.1",

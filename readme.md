@@ -10,37 +10,11 @@
 ## Install
 
 ```
-$ npm install babel-plugin-react-data-testid
-$ yarn add babel-plugin-react-data-testid
+$ npm install --save-dev babel-plugin-react-data-testid
+$ yarn add --dev babel-plugin-react-data-testid
 ```
 
 ## Usage
-
-```js
-const babelPluginReactDataTestid = require('babel-plugin-react-data-testid')
-
-babelPluginReactDataTestid('unicorns')
-//=> 'unicorns & rainbows'
-```
-
-## API
-
-### `babelPluginReactDataTestid(input, [options])`
-
-#### input
-
-Type: `string`
-
-Lorem ipsum.
-
-#### options
-
-##### foo
-
-Type: `boolean`<br>
-Default: `false`
-
-Lorem ipsum.
 
 ## Contributors
 
