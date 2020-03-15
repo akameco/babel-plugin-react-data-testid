@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`react-data-testid simple Component: simple Component 1`] = `
+exports[`react-data-testid basic Component: basic Component 1`] = `
 
 function Div() {
   return <div />
@@ -10,6 +10,21 @@ function Div() {
 
 function Div() {
   return <div data-testid="Div" />
+}
+
+
+`;
+
+exports[`react-data-testid nested Component: nested Component 1`] = `
+
+function Nested() {
+  return <div>hello</div>
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+function Nested() {
+  return <div data-testid="Nested">hello</div>
 }
 
 

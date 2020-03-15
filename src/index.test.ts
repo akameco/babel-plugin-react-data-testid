@@ -7,12 +7,20 @@ pluginTester({
   snapshot: true,
   tests: [
     {
-      title: 'simple Component',
+      title: 'basic Component',
       code: `
         function Div() {
           return <div />
         }
       `,
+    },
+    {
+      title: 'nested Component',
+      code: `
+        function Nested() {
+          return <div>hello</div>
+        }
+    `,
     },
   ],
 })
