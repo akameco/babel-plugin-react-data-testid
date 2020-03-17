@@ -24,7 +24,7 @@ $ yarn add --dev babel-plugin-react-data-testid
 }
 ```
 
-Before
+Before:
 
 ```js
 function Div() {
