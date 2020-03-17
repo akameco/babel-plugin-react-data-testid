@@ -24,20 +24,24 @@ $ yarn add --dev babel-plugin-react-data-testid
 }
 ```
 
-```diff
+Before
+
+```js
 function Div() {
   return <div />
 }
 
 const Hello = () => <div>hello</div>
+```
 
-// ↓　↓　↓
+After:
 
+```js
 function Div() {
-+  return <div data-testid="Div" />
+  return <div data-testid="Div" />
 }
 
-+ const Hello = () => <div data-testid="Hello">hello</div>
+const Hello = () => <div data-testid="Hello">hello</div>
 ```
 
 ## Contributors
