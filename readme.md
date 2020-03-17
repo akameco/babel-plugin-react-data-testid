@@ -16,6 +16,30 @@ $ yarn add --dev babel-plugin-react-data-testid
 
 ## Usage
 
+.babelrc
+
+```json
+{
+  "plugins": ["react-data-testid"]
+}
+```
+
+```diff
+function Div() {
+  return <div />
+}
+
+const Hello = () => <div>hello</div>
+
+// ↓　↓　↓
+
+function Div() {
++  return <div data-testid="Div" />
+}
+
++ const Hello = () => <div data-testid="Hello">hello</div>
+```
+
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):

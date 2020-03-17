@@ -1,9 +1,72 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`react-data-testid basic Component: basic Component 1`] = `
+exports[`react-data-testid arrow function: arrow function 1`] = `
+
+const Div = () => <div />
+
+const DivBody = () => {
+  return <div />
+}
+
+const Div2 = () => <Div />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const Div = () => <div data-testid="Div" />
+
+const DivBody = () => {
+  return <div data-testid="DivBody" />
+}
+
+const Div2 = () => <Div data-testid="Div2" />
+
+
+`;
+
+exports[`react-data-testid fragment: fragment 1`] = `
+
+import React from 'react'
+
+function Items() {
+  return <>
+    {items.map((item) => <Item key={item.key} />)}
+  </>
+}
+
+const Items2 = () => <React.Fragment>hello</React.Fragment>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import React from 'react'
+
+function Items() {
+  return (
+    <>
+      {items.map(item => (
+        <Item key={item.key} />
+      ))}
+    </>
+  )
+}
+
+const Items2 = () => <React.Fragment data-testid="Items2">hello</React.Fragment>
+
+
+`;
+
+exports[`react-data-testid function Component: function Component 1`] = `
 
 function Div() {
   return <div />
+}
+
+function Nested() {
+  return (
+    <div>
+      hello
+      <div>world</div>
+    </div>
+  )
 }
 
       ↓ ↓ ↓ ↓ ↓ ↓
@@ -12,20 +75,44 @@ function Div() {
   return <div data-testid="Div" />
 }
 
+function Nested() {
+  return (
+    <div data-testid="Nested">
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
 
 `;
 
-exports[`react-data-testid nested Component: nested Component 1`] = `
+exports[`react-data-testid with children: with children 1`] = `
 
-function Nested() {
-  return <div>hello</div>
+const Div = ({ children }) => <div>{children}</div>
+
+function Div2({ children }) {
+  return <div>{children}</div>
 }
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-function Nested() {
-  return <div data-testid="Nested">hello</div>
+const Div = ({ children }) => <div data-testid="Div">{children}</div>
+
+function Div2({ children }) {
+  return <div data-testid="Div2">{children}</div>
 }
+
+
+`;
+
+exports[`react-data-testid with data-testid: with data-testid 1`] = `
+
+const Div = () => <div data-testid="hello" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const Div = () => <div data-testid="hello" />
 
 
 `;

@@ -1,37 +1,91 @@
-import { PluginObj, NodePath } from '@babel/core'
+import { PluginObj, NodePath, Visitor } from '@babel/core'
 import * as t from '@babel/types'
-// import log from 'babel-log'
+// eslint-disable-next-line import/no-extraneous-dependencies
+// import blog from 'babel-log'
+
+type FunctionType =
+  | t.FunctionDeclaration
+  | t.FunctionExpression
+  | t.ArrowFunctionExpression
 
 function nameForReactComponent(
-  path: NodePath<t.FunctionDeclaration>
+  path: NodePath<FunctionType>
 ): t.Identifier | null {
-  if (t.isIdentifier(path.node.id)) {
+  const { parentPath } = path
+  if (!t.isArrowFunctionExpression(path.node) && t.isIdentifier(path.node.id)) {
     return path.node.id
+  }
+  if (t.isVariableDeclarator(parentPath)) {
+    // @ts-ignore
+    return parentPath.node.id
   }
   return null
 }
 
-export default function plugin(): PluginObj {
-  const returnStatementVistor = {
-    JSXElement(path: NodePath<t.JSXElement>, { name }: { name: string }) {
-      const openingElement = path.get('openingElement')
-      openingElement.node.attributes.push(
-        t.jsxAttribute(t.jsxIdentifier('data-testid'), t.stringLiteral(name))
-      )
-    },
-  }
+const DEFAULT_DATA_TESTID = 'data-testid'
 
+function createDataAttribute(name: string) {
+  return t.jsxAttribute(
+    t.jsxIdentifier(DEFAULT_DATA_TESTID),
+    t.stringLiteral(name)
+  )
+}
+
+function hasDataAttribute(node: t.JSXOpeningElement): boolean {
+  return node.attributes.some(
+    attribute =>
+      t.isJSXAttribute(attribute) &&
+      t.isJSXIdentifier(attribute.name, { name: DEFAULT_DATA_TESTID })
+  )
+}
+
+const returnStatementVistor: Visitor<{ name: string }> = {
+  // topがフラグメントのときはスキップする
+  JSXFragment(path) {
+    path.skip()
+  },
+  JSXElement(path, { name }) {
+    const openingElement = path.get('openingElement')
+
+    // topにあるJSX Elementのみ処理する
+    path.skip()
+
+    // すでにdata-testidがある場合は処理しない
+    if (hasDataAttribute(openingElement.node)) {
+      return
+    }
+
+    openingElement.node.attributes.push(createDataAttribute(name))
+  },
+}
+
+const functionVisitor: Visitor<{ name: string }> = {
+  ReturnStatement(path, state) {
+    const arg = path.get('argument')
+    if (!arg.isIdentifier()) {
+      path.traverse(returnStatementVistor, state)
+    }
+  },
+}
+
+export default function plugin(): PluginObj<{}> {
   return {
     name: 'react-data-testid',
     visitor: {
-      'FunctionDeclaration|FunctionExpression|ArrowFunctionExpression': (
-        path: NodePath<t.FunctionDeclaration>
+      'FunctionExpression|ArrowFunctionExpression|FunctionDeclaration': (
+        path: NodePath<FunctionType>
       ) => {
         const identifier = nameForReactComponent(path)
-        if (identifier) {
+        if (!identifier) {
+          return
+        }
+
+        if (path.isArrowFunctionExpression()) {
           path.traverse(returnStatementVistor, { name: identifier.name })
+        } else {
+          path.traverse(functionVisitor, { name: identifier.name })
         }
       },
     },
-  } as PluginObj
+  } as PluginObj<{}>
 }
