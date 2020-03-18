@@ -65,5 +65,13 @@ const Items2 = () => <React.Fragment>hello</React.Fragment>
 const Div = () => <div data-testid="hello" />
     `,
     },
+    {
+      title: 'export default',
+      code: `
+export default () => {
+  return <div>hello</div>
+}
+      `,
+    },
   ],
 })

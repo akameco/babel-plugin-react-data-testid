@@ -23,6 +23,21 @@ const Div2 = () => <Div data-testid="Div2" />
 
 `;
 
+exports[`react-data-testid export default: export default 1`] = `
+
+export default () => {
+  return <div>hello</div>
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+export default () => {
+  return <div>hello</div>
+}
+
+
+`;
+
 exports[`react-data-testid fragment: fragment 1`] = `
 
 import React from 'react'
