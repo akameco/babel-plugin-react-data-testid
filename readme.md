@@ -44,6 +44,8 @@ function Div() {
 const Hello = () => <div data-testid="Hello">hello</div>
 ```
 
+_Note_: Does not support class components.
+
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
