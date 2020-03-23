@@ -1,8 +1,14 @@
 {
   "projectName": "babel-plugin-react-data-testid",
   "projectOwner": "akameco",
-  "files": ["readme.md"],
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
   "commit": true,
+  "commitConvention": "angular",
   "contributors": [
     {
       "login": "akameco",
@@ -12,9 +18,10 @@
       "contributions": [
         "code",
         "doc",
-        "test",
-        "infra"
+        "infra",
+        "test"
       ]
     }
-  ]
+  ],
+  "contributorsPerLine": 7
 }
