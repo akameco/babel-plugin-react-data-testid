@@ -1,17 +1,18 @@
 <!--
 Thanks for your interest in the project. I appreciate bugs filed and PRs submitted!
-English/日本語(日本語で入力して大丈夫です。日本語の方が迅速です)
+
+日本語: urlの最後に &template=ja.md をつけてください。
 -->
 
-<!-- What changes are being made? (What feature/bug is being fixed here?) / 何が変更されていますか？-->
+<!-- What changes are being made? (What feature/bug is being fixed here?) -->
 **What**:
 
 
-<!-- Why are these changes necessary? / なぜその変更をする必要がありましたか？-->
+<!-- Why are these changes necessary? -->
 **Why**:
 
 
-<!-- How were these changes implemented? / これらの変更をどのように実装しましたか？-->
+<!-- How were these changes implemented? -->
 **How**:
 
 
