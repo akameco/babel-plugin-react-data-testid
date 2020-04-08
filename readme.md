@@ -18,7 +18,7 @@ $ yarn add --dev babel-plugin-react-data-testid
 
 ## Usage
 
-.babelrc
+.babelrc.json
 
 ```json
 {
@@ -47,6 +47,48 @@ const Hello = () => <div data-testid="Hello">hello</div>
 ```
 
 _Note_: Does not support class components.
+
+### Options
+
+#### attributes
+
+By default attributes with name `data-testid` will be added. You can also define custom attribute names via plugin options in your babel config.
+
+.babelrc.json
+
+```json
+{
+  "plugins": [["react-data-testid", { "attributes": ["data-cy"] }]]
+}
+```
+
+```js
+function Div() {
+  return <div />
+}
+
+const Hello = () => <div>hello</div>
+```
+
+After:
+
+```js
+function Div() {
+  return <div data-cy="Div" />
+}
+
+const Hello = () => <div data-cy="Hello">hello</div>
+```
+
+If you need to add multiple attributes, you can define an attributes array as follows:
+
+```json
+{
+  "plugins": [
+    ["react-data-testid", { "attributes": ["data-testid", "data-cy"] }]
+  ]
+}
+```
 
 ## Contributors ✨
 

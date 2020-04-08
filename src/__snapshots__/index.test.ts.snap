@@ -57,7 +57,7 @@ import React from 'react'
 function Items() {
   return (
     <>
-      {items.map(item => (
+      {items.map((item) => (
         <Item key={item.key} />
       ))}
     </>
@@ -102,6 +102,25 @@ function Nested() {
 
 `;
 
+exports[`react-data-testid jsx spread attribute: jsx spread attribute 1`] = `
+
+const Div = (props) => {
+  return <div {...props}>hello</div>
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const Div = (props) => {
+  return (
+    <div {...props} data-testid="Div">
+      hello
+    </div>
+  )
+}
+
+
+`;
+
 exports[`react-data-testid with children: with children 1`] = `
 
 const Div = ({ children }) => <div>{children}</div>
@@ -128,6 +147,50 @@ const Div = () => <div data-testid="hello" />
       ↓ ↓ ↓ ↓ ↓ ↓
 
 const Div = () => <div data-testid="hello" />
+
+
+`;
+
+exports[`with attributes function Component: function Component 1`] = `
+
+function Div() {
+  return <div />
+}
+
+function Nested() {
+  return (
+    <div>
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+function Div() {
+  return <div data-testid="Div" data-cy="Div" />
+}
+
+function Nested() {
+  return (
+    <div data-testid="Nested" data-cy="Nested">
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+
+`;
+
+exports[`with attributes with data-cy: with data-cy 1`] = `
+
+const Div = () => <div data-cy="hello" />
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const Div = () => <div data-cy="hello" data-testid="Div" />
 
 
 `;

@@ -1,14 +1,9 @@
 import pluginTester from 'babel-plugin-tester'
 import plugin from '.'
 
-pluginTester({
-  plugin,
-  babelOptions: { parserOpts: { plugins: ['jsx'] } },
-  snapshot: true,
-  tests: [
-    {
-      title: 'function Component',
-      code: `
+const test1 = {
+  title: 'function Component',
+  code: `
 function Div() {
   return <div />
 }
@@ -22,7 +17,14 @@ function Nested() {
   )
 }
       `,
-    },
+}
+
+pluginTester({
+  plugin,
+  babelOptions: { parserOpts: { plugins: ['jsx'] } },
+  snapshot: true,
+  tests: [
+    test1,
     {
       title: 'arrow function',
       code: `
@@ -72,6 +74,33 @@ export default () => {
   return <div>hello</div>
 }
       `,
+    },
+    {
+      title: 'jsx spread attribute',
+      code: `
+const Div = (props) => {
+  return <div {...props}>hello</div>
+}
+      `,
+    },
+  ],
+})
+
+pluginTester({
+  title: 'with attributes',
+  plugin,
+  pluginOptions: {
+    attributes: ['data-testid', 'data-cy'],
+  },
+  babelOptions: { parserOpts: { plugins: ['jsx'] } },
+  snapshot: true,
+  tests: [
+    test1,
+    {
+      title: 'with data-cy',
+      code: `
+const Div = () => <div data-cy="hello" />
+    `,
     },
   ],
 })
