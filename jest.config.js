@@ -4,7 +4,7 @@ module.exports = {
   modulePathIgnorePatterns: ['dest'],
   globals: {
     'ts-jest': {
-      diagnostics: false,
+      diagnostics: 'warn',
     },
   },
 }
