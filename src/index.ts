@@ -75,6 +75,7 @@ const functionVisitor: Visitor<VisitorState> = {
 type State = {
   opts: {
     attributes?: string[]
+    format?: string
   }
 }
 
@@ -92,14 +93,19 @@ export default function plugin(): PluginObj<State> {
         }
 
         const attributes = state.opts.attributes ?? [DEFAULT_DATA_TESTID]
+        const format = state.opts.format ?? '%s'
+        const formattedName = format.replace('%s', identifier.name)
 
         if (path.isArrowFunctionExpression()) {
           path.traverse(returnStatementVistor, {
-            name: identifier.name,
+            name: formattedName,
             attributes,
           })
         } else {
-          path.traverse(functionVisitor, { name: identifier.name, attributes })
+          path.traverse(functionVisitor, {
+            name: formattedName,
+            attributes,
+          })
         }
       },
     },
