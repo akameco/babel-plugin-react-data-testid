@@ -50,13 +50,12 @@ _Note_: Does not support class components.
 
 ### Options
 
-#### attributes
+#### `attributes`
 
 By default attributes with name `data-testid` will be added. You can also define custom attribute names via plugin options in your babel config.
 
-.babelrc.json
-
 ```json
+// .babelrc.json
 {
   "plugins": [["react-data-testid", { "attributes": ["data-cy"] }]]
 }
@@ -88,6 +87,27 @@ If you need to add multiple attributes, you can define an attributes array as fo
     ["react-data-testid", { "attributes": ["data-testid", "data-cy"] }]
   ]
 }
+```
+
+#### `format`
+
+You can change how the component name is formatted using `format` option.
+
+```json
+// .babelrc.json
+{
+  "plugins": [["react-data-testid", { "option": ["My%s"] }]]
+}
+```
+
+```js
+const Hello = () => <div>hello</div>
+```
+
+After:
+
+```js
+const Hello = () => <div data-testid="MyHello">hello</div>
 ```
 
 ## Contributors ✨

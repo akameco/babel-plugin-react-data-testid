@@ -104,3 +104,14 @@ const Div = () => <div data-cy="hello" />
     },
   ],
 })
+
+pluginTester({
+  title: 'with format',
+  plugin,
+  pluginOptions: {
+    format: '_%s',
+  },
+  babelOptions: { parserOpts: { plugins: ['jsx'] } },
+  snapshot: true,
+  tests: [test1],
+})

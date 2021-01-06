@@ -194,3 +194,36 @@ const Div = () => <div data-cy="hello" data-testid="Div" />
 
 
 `;
+
+exports[`with format function Component: function Component 1`] = `
+
+function Div() {
+  return <div />
+}
+
+function Nested() {
+  return (
+    <div>
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+function Div() {
+  return <div data-testid="_Div" />
+}
+
+function Nested() {
+  return (
+    <div data-testid="_Nested">
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+
+`;
