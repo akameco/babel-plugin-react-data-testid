@@ -57,7 +57,7 @@ const returnStatementVistor: Visitor<VisitorState> = {
       if (!hasDataAttribute(openingElement.node, attribute)) {
         const dataAttribute = createDataAttribute(name, attribute)
         // @ts-ignore
-        openingElement.node.attributes.push(dataAttribute)
+        openingElement.node.attributes.unshift(dataAttribute)
       }
     }
   },
@@ -92,7 +92,9 @@ export default function plugin(): PluginObj<State> {
           return
         }
 
-        const attributes = state.opts.attributes ?? [DEFAULT_DATA_TESTID]
+        const attributes = [
+          ...(state.opts.attributes ?? [DEFAULT_DATA_TESTID]),
+        ].reverse()
         const format = state.opts.format ?? '%s'
         const formattedName = format.replace('%s', identifier.name)
 
