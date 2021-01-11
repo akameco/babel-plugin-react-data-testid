@@ -112,7 +112,7 @@ const Div = (props) => {
 
 const Div = (props) => {
   return (
-    <div {...props} data-testid="Div">
+    <div data-testid="Div" {...props}>
       hello
     </div>
   )
@@ -190,7 +190,7 @@ const Div = () => <div data-cy="hello" />
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-const Div = () => <div data-cy="hello" data-testid="Div" />
+const Div = () => <div data-testid="Div" data-cy="hello" />
 
 
 `;

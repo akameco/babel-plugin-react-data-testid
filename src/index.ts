@@ -57,7 +57,7 @@ const returnStatementVistor: Visitor<VisitorState> = {
       if (!hasDataAttribute(openingElement.node, attribute)) {
         const dataAttribute = createDataAttribute(name, attribute)
         // @ts-ignore
-        openingElement.node.attributes.push(dataAttribute)
+        openingElement.node.attributes.unshift(dataAttribute)
       }
     }
   },
@@ -90,8 +90,9 @@ export default function plugin(): PluginObj<State> {
         if (!identifier) {
           return
         }
-
-        const attributes = state.opts.attributes ?? [DEFAULT_DATA_TESTID]
+        const attributes = [
+          ...(state.opts.attributes ?? [DEFAULT_DATA_TESTID]),
+        ].reverse()
 
         if (path.isArrowFunctionExpression()) {
           path.traverse(returnStatementVistor, {
