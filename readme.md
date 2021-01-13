@@ -112,7 +112,7 @@ const Hello = () => <div data-testid="MyHello">hello</div>
 
 #### `ignore`
 
-You ignore adding testIDs to some of the components by specifying their names in `ignore` option. (By default, it equals to `['React.Fragment']`.)
+You can ignore adding testIDs to some of the components by specifying their names in `ignore` option. (By default it equals to `['React.Fragment']`.)
 
 ```json
 // .babelrc.json
@@ -135,6 +135,19 @@ After:
 const A = () => <div data-testid="A">hello</div>
 const B = () => <React.Fragment>hello</React.Fragment>
 const C = () => <MyComponent>hello</MyComponent>
+```
+
+#### `ignoreFiles`
+
+You can ignore adding testIDs to some of the files transpiled by babel by specifying their full file paths in `ignoreFiles` option. (By default it ignores: `/node_modules/*`.)
+
+```js
+// .babelrc.js
+{
+  "plugins": [
+    ["react-data-testid", { "ignoreFiles": ["/a/b/c/my.js", /\/node_modules\/.+?/] }]
+  ]
+}
 ```
 
 ## Contributors ✨

@@ -1,3 +1,4 @@
+import path from 'path'
 import pluginTester from 'babel-plugin-tester'
 import plugin from '.'
 
@@ -136,6 +137,27 @@ const Item3 = () => <MyComponent>hello</MyComponent>
 const Item4 = () => <My.Fancy.Component>hello</My.Fancy.Component>
 const Item5 = () => <My.Fancy.MyComponent>hello</My.Fancy.MyComponent>
       `,
+    },
+  ],
+})
+
+pluginTester({
+  title: 'ignores ignored filenames',
+  filename: __filename,
+  plugin,
+  pluginOptions: {
+    ignoreFiles: [/\btest1.js$/u],
+  },
+  babelOptions: { parserOpts: { plugins: ['jsx'] } },
+  snapshot: true,
+  tests: [
+    {
+      title: 'ignored file',
+      fixture: path.join(__dirname, '__test-utils__', 'test1.js'),
+    },
+    {
+      title: 'not ignored file',
+      fixture: path.join(__dirname, '__test-utils__', 'test2.js'),
     },
   ],
 })

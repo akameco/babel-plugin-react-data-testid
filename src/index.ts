@@ -1,4 +1,4 @@
-import { PluginObj, NodePath, Visitor } from '@babel/core'
+import { PluginObj, NodePath, Visitor, TransformOptions } from '@babel/core'
 import * as t from '@babel/types'
 // eslint-disable-next-line import/no-extraneous-dependencies
 // import blog from 'babel-log'
@@ -59,6 +59,20 @@ function getJSXNodeName(
   throw new TypeError(`Unknown node.type: ${(node as any).type}`)
 }
 
+function isFileIgnored(
+  filename: string | undefined,
+  ignoreFiles: PluginOptions['ignoreFiles']
+): boolean {
+  if (!filename || !ignoreFiles) {
+    return false
+  }
+  return ignoreFiles.some((pattern) => {
+    return typeof pattern === 'string'
+      ? pattern === filename
+      : pattern.exec(filename)
+  })
+}
+
 type VisitorState = {
   name: string
   attributes: string[]
@@ -101,11 +115,19 @@ const functionVisitor: Visitor<VisitorState> = {
   },
 }
 
-type State = {
-  opts: {
-    attributes?: string[]
-    format?: string
-    ignore?: string[]
+interface PluginOptions {
+  attributes?: string[]
+  format?: string
+  ignore?: string[]
+  ignoreFiles?: (string | RegExp)[]
+}
+
+interface State extends TransformOptions {
+  opts: PluginOptions
+  file: {
+    opts: {
+      filename?: string
+    }
   }
 }
 
@@ -120,11 +142,19 @@ export default function plugin(): PluginObj<State> {
             attributes = [DEFAULT_DATA_TESTID],
             format = '%s',
             ignore = ['React.Fragment'],
+            ignoreFiles = [/\/node_modules\/.+?/u],
+          },
+          file: {
+            opts: { filename },
           },
         }: State
       ) => {
         const identifier = nameForReactComponent(path)
         if (!identifier) {
+          return
+        }
+
+        if (isFileIgnored(filename, ignoreFiles)) {
           return
         }
 
