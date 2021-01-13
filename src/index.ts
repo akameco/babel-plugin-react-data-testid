@@ -39,18 +39,47 @@ function hasDataAttribute(
   )
 }
 
-type VisitorState = { name: string; attributes: string[] }
+function getJSXNodeName(
+  node: t.JSXIdentifier | t.JSXNamespacedName | t.JSXMemberExpression,
+  prefix?: string
+): string {
+  if (node.type === 'JSXIdentifier') {
+    return `${prefix ?? ''}${node.name}`
+  }
+
+  if (node.type === 'JSXNamespacedName') {
+    return `${prefix ?? ''}${node.namespace}.${node.name}`
+  }
+
+  if (node.type === 'JSXMemberExpression') {
+    return `${getJSXNodeName(node.object, prefix)}.${node.property.name}`
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  throw new TypeError(`Unknown node.type: ${(node as any).type}`)
+}
+
+type VisitorState = {
+  name: string
+  attributes: string[]
+  ignoredComponentNames: string[]
+}
 
 const returnStatementVistor: Visitor<VisitorState> = {
   // topがフラグメントのときはスキップする
   JSXFragment(path) {
     path.skip()
   },
-  JSXElement(path, { name, attributes }) {
+  JSXElement(path, { name, attributes, ignoredComponentNames }) {
     const openingElement = path.get('openingElement')
+    const componentName = getJSXNodeName(openingElement.get('name').node)
 
     // topにあるJSX Elementのみ処理する
     path.skip()
+
+    if (componentName && ignoredComponentNames.includes(componentName)) {
+      return
+    }
 
     for (const attribute of attributes) {
       // すでにdata-testidがある場合は処理しない
@@ -76,6 +105,7 @@ type State = {
   opts: {
     attributes?: string[]
     format?: string
+    ignore?: string[]
   }
 }
 
@@ -85,28 +115,33 @@ export default function plugin(): PluginObj<State> {
     visitor: {
       'FunctionExpression|ArrowFunctionExpression|FunctionDeclaration': (
         path: NodePath<FunctionType>,
-        state: State
+        {
+          opts: {
+            attributes = [DEFAULT_DATA_TESTID],
+            format = '%s',
+            ignore = ['React.Fragment'],
+          },
+        }: State
       ) => {
         const identifier = nameForReactComponent(path)
         if (!identifier) {
           return
         }
 
-        const attributes = [
-          ...(state.opts.attributes ?? [DEFAULT_DATA_TESTID]),
-        ].reverse()
-        const format = state.opts.format ?? '%s'
+        const attributesReversed = [...attributes].reverse()
         const formattedName = format.replace('%s', identifier.name)
 
         if (path.isArrowFunctionExpression()) {
           path.traverse(returnStatementVistor, {
             name: formattedName,
-            attributes,
+            attributes: attributesReversed,
+            ignoredComponentNames: ignore,
           })
         } else {
           path.traverse(functionVisitor, {
             name: formattedName,
-            attributes,
+            attributes: attributesReversed,
+            ignoredComponentNames: ignore,
           })
         }
       },

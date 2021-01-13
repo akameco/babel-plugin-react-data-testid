@@ -110,6 +110,33 @@ After:
 const Hello = () => <div data-testid="MyHello">hello</div>
 ```
 
+#### `ignore`
+
+You ignore adding testIDs to some of the components by specifying their names in `ignore` option. (By default, it equals to `['React.Fragment']`.)
+
+```json
+// .babelrc.json
+{
+  "plugins": [
+    ["react-data-testid", { "ignore": ["React.Fragment", "MyComponent"] }]
+  ]
+}
+```
+
+```js
+const A = () => <div>hello</div>
+const B = () => <React.Fragment>hello</React.Fragment>
+const C = () => <MyComponent>hello</MyComponent>
+```
+
+After:
+
+```js
+const A = () => <div data-testid="A">hello</div>
+const B = () => <React.Fragment>hello</React.Fragment>
+const C = () => <MyComponent>hello</MyComponent>
+```
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):

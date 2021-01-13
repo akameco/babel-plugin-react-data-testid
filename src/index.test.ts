@@ -115,3 +115,27 @@ pluginTester({
   snapshot: true,
   tests: [test1],
 })
+
+pluginTester({
+  title: 'with ignored option',
+  plugin,
+  pluginOptions: {
+    ignore: ['React.Fragment', 'MyComponent', 'My.Fancy.Component'],
+  },
+  babelOptions: { parserOpts: { plugins: ['jsx'] } },
+  snapshot: true,
+  tests: [
+    {
+      title: 'ignored',
+      code: `
+import React from 'react'
+
+const Item1 = () => <>hello</>
+const Item2 = () => <React.Fragment>hello</React.Fragment>
+const Item3 = () => <MyComponent>hello</MyComponent>
+const Item4 = () => <My.Fancy.Component>hello</My.Fancy.Component>
+const Item5 = () => <My.Fancy.MyComponent>hello</My.Fancy.MyComponent>
+      `,
+    },
+  ],
+})
