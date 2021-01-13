@@ -1,5 +1,71 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ignores ignored filenames ignored file: ignored file 1`] = `
+
+function Div() {
+  return <div />
+}
+
+function Nested() {
+  return (
+    <div>
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+function Div() {
+  return <div />
+}
+
+function Nested() {
+  return (
+    <div>
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+
+`;
+
+exports[`ignores ignored filenames not ignored file: not ignored file 1`] = `
+
+function Div() {
+  return <div />
+}
+
+function Nested() {
+  return (
+    <div>
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+function Div() {
+  return <div data-testid="Div" />
+}
+
+function Nested() {
+  return (
+    <div data-testid="Nested">
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+
+`;
+
 exports[`react-data-testid arrow function: arrow function 1`] = `
 
 const Div = () => <div />
@@ -64,7 +130,7 @@ function Items() {
   )
 }
 
-const Items2 = () => <React.Fragment data-testid="Items2">hello</React.Fragment>
+const Items2 = () => <React.Fragment>hello</React.Fragment>
 
 
 `;
@@ -112,7 +178,7 @@ const Div = (props) => {
 
 const Div = (props) => {
   return (
-    <div {...props} data-testid="Div">
+    <div data-testid="Div" {...props}>
       hello
     </div>
   )
@@ -190,7 +256,69 @@ const Div = () => <div data-cy="hello" />
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-const Div = () => <div data-cy="hello" data-testid="Div" />
+const Div = () => <div data-testid="Div" data-cy="hello" />
+
+
+`;
+
+exports[`with format function Component: function Component 1`] = `
+
+function Div() {
+  return <div />
+}
+
+function Nested() {
+  return (
+    <div>
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+function Div() {
+  return <div data-testid="_Div" />
+}
+
+function Nested() {
+  return (
+    <div data-testid="_Nested">
+      hello
+      <div>world</div>
+    </div>
+  )
+}
+
+
+`;
+
+exports[`with ignored option ignored: ignored 1`] = `
+
+import React from 'react'
+
+const Item1 = () => <>hello</>
+const Item2 = () => <React.Fragment>hello</React.Fragment>
+const Item3 = () => <MyComponent>hello</MyComponent>
+const Item4 = () => <My.Fancy.Component>hello</My.Fancy.Component>
+const Item5 = () => <My.Fancy.MyComponent>hello</My.Fancy.MyComponent>
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import React from 'react'
+
+const Item1 = () => <>hello</>
+
+const Item2 = () => <React.Fragment>hello</React.Fragment>
+
+const Item3 = () => <MyComponent>hello</MyComponent>
+
+const Item4 = () => <My.Fancy.Component>hello</My.Fancy.Component>
+
+const Item5 = () => (
+  <My.Fancy.MyComponent data-testid="Item5">hello</My.Fancy.MyComponent>
+)
 
 
 `;

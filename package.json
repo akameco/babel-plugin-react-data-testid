@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-react-data-testid",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "description": "babel plugin for react data-testid attributes",
   "license": "MIT",
   "repository": "akameco/babel-plugin-react-data-testid",

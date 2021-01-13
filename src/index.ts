@@ -1,4 +1,4 @@
-import { PluginObj, NodePath, Visitor } from '@babel/core'
+import { PluginObj, NodePath, Visitor, TransformOptions } from '@babel/core'
 import * as t from '@babel/types'
 // eslint-disable-next-line import/no-extraneous-dependencies
 // import blog from 'babel-log'
@@ -39,25 +39,68 @@ function hasDataAttribute(
   )
 }
 
-type VisitorState = { name: string; attributes: string[] }
+function getJSXNodeName(
+  node: t.JSXIdentifier | t.JSXNamespacedName | t.JSXMemberExpression,
+  prefix?: string
+): string {
+  if (node.type === 'JSXIdentifier') {
+    return `${prefix ?? ''}${node.name}`
+  }
+
+  if (node.type === 'JSXNamespacedName') {
+    return `${prefix ?? ''}${node.namespace}.${node.name}`
+  }
+
+  if (node.type === 'JSXMemberExpression') {
+    return `${getJSXNodeName(node.object, prefix)}.${node.property.name}`
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  throw new TypeError(`Unknown node.type: ${(node as any).type}`)
+}
+
+function isFileIgnored(
+  filename: string | undefined,
+  ignoreFiles: PluginOptions['ignoreFiles']
+): boolean {
+  if (!filename || !ignoreFiles) {
+    return false
+  }
+  return ignoreFiles.some((pattern) => {
+    return typeof pattern === 'string'
+      ? pattern === filename
+      : pattern.exec(filename)
+  })
+}
+
+type VisitorState = {
+  name: string
+  attributes: string[]
+  ignoredComponentNames: string[]
+}
 
 const returnStatementVistor: Visitor<VisitorState> = {
   // topがフラグメントのときはスキップする
   JSXFragment(path) {
     path.skip()
   },
-  JSXElement(path, { name, attributes }) {
+  JSXElement(path, { name, attributes, ignoredComponentNames }) {
     const openingElement = path.get('openingElement')
+    const componentName = getJSXNodeName(openingElement.get('name').node)
 
     // topにあるJSX Elementのみ処理する
     path.skip()
+
+    if (componentName && ignoredComponentNames.includes(componentName)) {
+      return
+    }
 
     for (const attribute of attributes) {
       // すでにdata-testidがある場合は処理しない
       if (!hasDataAttribute(openingElement.node, attribute)) {
         const dataAttribute = createDataAttribute(name, attribute)
         // @ts-ignore
-        openingElement.node.attributes.push(dataAttribute)
+        openingElement.node.attributes.unshift(dataAttribute)
       }
     }
   },
@@ -72,9 +115,19 @@ const functionVisitor: Visitor<VisitorState> = {
   },
 }
 
-type State = {
-  opts: {
-    attributes?: string[]
+interface PluginOptions {
+  attributes?: string[]
+  format?: string
+  ignore?: string[]
+  ignoreFiles?: (string | RegExp)[]
+}
+
+interface State extends TransformOptions {
+  opts: PluginOptions
+  file: {
+    opts: {
+      filename?: string
+    }
   }
 }
 
@@ -84,22 +137,42 @@ export default function plugin(): PluginObj<State> {
     visitor: {
       'FunctionExpression|ArrowFunctionExpression|FunctionDeclaration': (
         path: NodePath<FunctionType>,
-        state: State
+        {
+          opts: {
+            attributes = [DEFAULT_DATA_TESTID],
+            format = '%s',
+            ignore = ['React.Fragment', 'Fragment'],
+            ignoreFiles = [/\/node_modules\/.+?/u],
+          },
+          file: {
+            opts: { filename },
+          },
+        }: State
       ) => {
         const identifier = nameForReactComponent(path)
         if (!identifier) {
           return
         }
 
-        const attributes = state.opts.attributes ?? [DEFAULT_DATA_TESTID]
+        if (isFileIgnored(filename, ignoreFiles)) {
+          return
+        }
+
+        const attributesReversed = [...attributes].reverse()
+        const formattedName = format.replace('%s', identifier.name)
 
         if (path.isArrowFunctionExpression()) {
           path.traverse(returnStatementVistor, {
-            name: identifier.name,
-            attributes,
+            name: formattedName,
+            attributes: attributesReversed,
+            ignoredComponentNames: ignore,
           })
         } else {
-          path.traverse(functionVisitor, { name: identifier.name, attributes })
+          path.traverse(functionVisitor, {
+            name: formattedName,
+            attributes: attributesReversed,
+            ignoredComponentNames: ignore,
+          })
         }
       },
     },

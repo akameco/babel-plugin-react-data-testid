@@ -50,13 +50,12 @@ _Note_: Does not support class components.
 
 ### Options
 
-#### attributes
+#### `attributes`
 
 By default attributes with name `data-testid` will be added. You can also define custom attribute names via plugin options in your babel config.
 
-.babelrc.json
-
 ```json
+// .babelrc.json
 {
   "plugins": [["react-data-testid", { "attributes": ["data-cy"] }]]
 }
@@ -86,6 +85,67 @@ If you need to add multiple attributes, you can define an attributes array as fo
 {
   "plugins": [
     ["react-data-testid", { "attributes": ["data-testid", "data-cy"] }]
+  ]
+}
+```
+
+#### `format`
+
+You can change how the component name is formatted using `format` option.
+
+```json
+// .babelrc.json
+{
+  "plugins": [["react-data-testid", { "option": ["My%s"] }]]
+}
+```
+
+```js
+const Hello = () => <div>hello</div>
+```
+
+After:
+
+```js
+const Hello = () => <div data-testid="MyHello">hello</div>
+```
+
+#### `ignore`
+
+You can ignore adding testIDs to some of the components by specifying their names in `ignore` option. (By default it equals to `['React.Fragment', 'Fragment']`.)
+
+```json
+// .babelrc.json
+{
+  "plugins": [
+    ["react-data-testid", { "ignore": ["React.Fragment", "MyComponent"] }]
+  ]
+}
+```
+
+```js
+const A = () => <div>hello</div>
+const B = () => <React.Fragment>hello</React.Fragment>
+const C = () => <MyComponent>hello</MyComponent>
+```
+
+After:
+
+```js
+const A = () => <div data-testid="A">hello</div>
+const B = () => <React.Fragment>hello</React.Fragment>
+const C = () => <MyComponent>hello</MyComponent>
+```
+
+#### `ignoreFiles`
+
+You can ignore adding testIDs to some of the files transpiled by babel by specifying their full file paths in `ignoreFiles` option. (By default it ignores: `/node_modules/*`.)
+
+```js
+// .babelrc.js
+{
+  "plugins": [
+    ["react-data-testid", { "ignoreFiles": ["/a/b/c/my.js", /\/node_modules\/.+?/] }]
   ]
 }
 ```
