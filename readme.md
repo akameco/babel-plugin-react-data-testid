@@ -112,7 +112,7 @@ const Hello = () => <div data-testid="MyHello">hello</div>
 
 #### `ignore`
 
-You can ignore adding testIDs to some of the components by specifying their names in `ignore` option. (By default it equals to `['React.Fragment']`.)
+You can ignore adding testIDs to some of the components by specifying their names in `ignore` option. (By default it equals to `['React.Fragment', 'Fragment']`.)
 
 ```json
 // .babelrc.json

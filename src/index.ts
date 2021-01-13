@@ -141,7 +141,7 @@ export default function plugin(): PluginObj<State> {
           opts: {
             attributes = [DEFAULT_DATA_TESTID],
             format = '%s',
-            ignore = ['React.Fragment'],
+            ignore = ['React.Fragment', 'Fragment'],
             ignoreFiles = [/\/node_modules\/.+?/u],
           },
           file: {
